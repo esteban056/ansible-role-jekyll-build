@@ -11,4 +11,5 @@ galaxy_info:
   galaxy_tags: []
 
 dependencies:
-- role: openmicroscopy.versioncontrol-utils
+    - { role: ruby }
+    # - { role: geerlingguy.ruby }

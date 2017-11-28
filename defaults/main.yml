@@ -4,6 +4,7 @@
 jekyll_build_owner: root
 jekyll_build_group: root
 jekyll_build_name: localhost
+jekyll_directory: "jekyll-project"
 jekyll_build_sourcedir: "/home/{{ jekyll_build_owner }}/{{ jekyll_build_name }}"
 jekyll_build_root: /var/www/{{ jekyll_build_name }}/html
 # Reguired: URL to git repository

@@ -1,18 +1,4 @@
 ---
-# tasks file for roles/jekyll-build
-
-- name: jekyll | install required packages
-  become: yes
-  yum:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - rubygems
-    - ruby-devel
-    - make
-    - gcc
-    - libxml2-devel
-    - libxslt-devel
 
 - name: jekyll | install bundler
   become: yes
@@ -20,9 +6,7 @@
     name: bundler
     state: present
     user_install: no
-    # bundler adds the version to Gemfile.lock, so to avoid an idempotence
-    # error the versions must match
-    version: 1.15.4
+    version: 1.16.0
 
 - name: jekyll | install pkg-config
   become: yes
@@ -48,7 +32,7 @@
   - Gemfile.lock
 
 - name: jekyll | install jekyll
-  become: yes
+  # become: yes
   bundler:
     chdir: /opt/jekyll-build
     executable: /usr/local/bin/bundler
@@ -56,11 +40,11 @@
 
 - name: jekyll | create site root directory
   become: yes
+  become_user: "{{ jekyll_build_owner }}"
   file:
     state: directory
-    dest: "{{ jekyll_build_root }}"
+    dest: "/opt/tinker/shared_files/jekyll"
     owner: "{{ jekyll_build_owner }}"
-    group: "{{ jekyll_build_group }}"
     mode: 0755
     serole: _default
     setype: _default
@@ -72,15 +56,15 @@
   git:
     repo: "{{ jekyll_build_git_repo }}"
     version: "{{ jekyll_build_git_branch | default(omit) }}"
-    dest: "{{ jekyll_build_sourcedir }}"
+    dest: "{{ jekyll_build_sourcedir }}/{{ jekyll_build_git_repo | basename }}"
     force: "{{ jekyll_build_force_git }}"
   notify:
    - update bundle
    - jekyll build
-
--  debug:
-     msg: "Force jekyll rebuild: {{ jekyll_build_force_rebuild }}"
-   notify:
-   - update bundle
-   - jekyll build
-   changed_when: jekyll_build_force_rebuild
+#
+# -  debug:
+#      msg: "Force jekyll rebuild: {{ jekyll_build_force_rebuild }}"
+#    notify:
+#    - update bundle
+#    - jekyll build
+#    changed_when: jekyll_build_force_rebuild
