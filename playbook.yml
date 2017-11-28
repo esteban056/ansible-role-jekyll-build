@@ -3,4 +3,4 @@
   vars:
     jekyll_build_git_repo: "https://github.com/openmicroscopy/www.openmicroscopy.org"
   roles:
-   - role: ansible-role-jekyll-build
+   - role: jekyll
