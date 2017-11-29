@@ -13,6 +13,6 @@ jekyll_build_root: /var/www/{{ jekyll_build_name }}/html
 #jekyll_build_git_branch:
 jekyll_build_baseurl: ""
 jekyll_build_config: []
-
+ruby_install_gems: ['jekyll']
 jekyll_build_force_git: False
 jekyll_build_force_rebuild: False

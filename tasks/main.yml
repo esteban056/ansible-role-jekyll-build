@@ -1,49 +1,11 @@
 ---
 
-- name: jekyll | install bundler
-  become: yes
-  gem:
-    name: bundler
-    state: present
-    user_install: no
-    version: 1.16.0
-
-- name: jekyll | install pkg-config
-  become: yes
-  gem:
-    name: pkg-config
-    state: present
-    user_install: no
-
-- name: jekyll | create jekyll install directory
-  become: yes
-  file:
-    path: /opt/jekyll-build/
-    state: directory
-
-- name: jekyll | copy gemfiles
-  become: yes
-  copy:
-    dest: /opt/jekyll-build/{{ item }}
-    force: yes
-    src: "{{ item }}"
-  with_items:
-  - Gemfile
-  - Gemfile.lock
-
-- name: jekyll | install jekyll
-  # become: yes
-  bundler:
-    chdir: /opt/jekyll-build
-    executable: /usr/local/bin/bundler
-    state: present
-
 - name: jekyll | create site root directory
   become: yes
   become_user: "{{ jekyll_build_owner }}"
   file:
     state: directory
-    dest: "/opt/tinker/shared_files/jekyll"
+    dest: "{{ jekyll_build_sourcedir }}"
     owner: "{{ jekyll_build_owner }}"
     mode: 0755
     serole: _default
@@ -58,13 +20,15 @@
     version: "{{ jekyll_build_git_branch | default(omit) }}"
     dest: "{{ jekyll_build_sourcedir }}/{{ jekyll_build_git_repo | basename }}"
     force: "{{ jekyll_build_force_git }}"
-  notify:
-   - update bundle
-   - jekyll build
-#
-# -  debug:
-#      msg: "Force jekyll rebuild: {{ jekyll_build_force_rebuild }}"
-#    notify:
-#    - update bundle
-#    - jekyll build
-#    changed_when: jekyll_build_force_rebuild
+
+- name: update bundle
+  become: yes
+  command: bundle install
+  args:
+    chdir: "{{jekyll_build_sourcedir}}/{{jekyll_directory}}"
+    removes: "{{jekyll_build_sourcedir}}/{{jekyll_directory}}/Gemfile"
+
+- name: jekyll build
+  command: bundle exec jekyll build
+  args:
+    chdir: "{{ jekyll_build_sourcedir }}/{{ jekyll_directory }}"
