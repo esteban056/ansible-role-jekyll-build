@@ -30,5 +30,7 @@
 
 - name: jekyll build
   command: bundle exec jekyll build
+  environment:
+    LC_ALL: "en_US.UTF-8"
   args:
     chdir: "{{ jekyll_build_sourcedir }}/{{ jekyll_directory }}"
