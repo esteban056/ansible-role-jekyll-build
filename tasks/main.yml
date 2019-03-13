@@ -21,6 +21,10 @@
     dest: "{{ jekyll_build_sourcedir }}/{{ jekyll_build_git_repo | basename }}"
     force: "{{ jekyll_build_force_git }}"
 
+- name: install bundler
+  become: yes
+  shell: gem install bundler -v 1.16.1
+
 - name: update bundle
   become: yes
   command: bundle install
