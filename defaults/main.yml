@@ -16,3 +16,5 @@ jekyll_build_config: []
 ruby_install_gems: ['jekyll']
 jekyll_build_force_git: False
 jekyll_build_force_rebuild: False
+
+bundler_version: 1.16.1

@@ -22,8 +22,9 @@
     force: "{{ jekyll_build_force_git }}"
 
 - name: install bundler
-  become: yes
-  shell: gem install bundler -v 1.16.1
+  gem: 
+    name: bundler
+    version: "{{bundler_version}}"
 
 - name: update bundle
   become: yes
